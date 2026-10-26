@@ -21,12 +21,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ---
-This licence covers the source code in this repository. It does not cover:
-- published data files, which carry their own licences (CC BY 4.0 or ODbL 1.0; see
-  docs/decisions/0002-outbound-data-licences.md and each file's "meta" block);
-- third-party libraries in site/*/vendor/, which keep their own licences (see the
-  *-LICENSE.txt files next to them);
-- fonts in site/*/fonts/ and map glyphs in site/*/map/glyphs/, licensed under the SIL Open Font
-  License 1.1 (see the *OFL.txt files next to them);
-- the basemap tiles (site/*/data/basemap-*.pmtiles), an OpenStreetMap-derived database under the
-  Open Database License 1.0 (© OpenStreetMap contributors).
+This licence covers the code in this repository (HTML, CSS and JavaScript written for this site). It does not cover:
+- data files in data/, which carry their own licences (CC BY 4.0 or ODbL 1.0; see each file's "meta" block and
+  data/manifest.json);
+- the basemap tiles data/basemap-*.pmtiles, an OpenStreetMap-derived database under the Open Database License 1.0
+  (© OpenStreetMap contributors);
+- third-party libraries in vendor/, which keep their own licences (see the *-LICENSE.txt files next to them);
+- fonts in fonts/ and map glyphs in map/glyphs/, licensed under the SIL Open Font License 1.1 (see the *OFL.txt
+  files next to them).
