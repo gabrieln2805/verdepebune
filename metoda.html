@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; worker-src blob:; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'">
+<title>Cum am calculat – Verde pe bune</title>
+<meta name="description" content="Definiții, ani, surse, licențe și limite ale măsurilor de verdeață din București.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+<link rel="preload" href="fonts/literata-latin-opsz-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/work-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+</head>
+<body>
+<a class="skip" href="#main">Sari la conținut</a>
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">Verde pe bune</a>
+  <nav aria-label="Principal"><ul>
+    <li><a href="index.html">Acasă</a></li>
+    <li><a href="harta.html">Harta coronamentului</a></li>
+    <li><a href="metoda.html" aria-current="page">Cum am calculat</a></li>
+    <li><a href="despre.html">Despre</a></li>
+  </ul></nav>
+</div></header>
+
+<main id="main" class="wrap">
+  <div class="hero">
+  <h1>Cum am calculat</h1>
+  <p class="lead">Pe această pagină explicăm ce măsurăm, din ce date, pentru ce ani și ce nu putem spune. Toate valorile sunt calculate cu reguli fixe, din date publice. Niciuna nu este produsă de un model de inteligență artificială.</p>
+  </div>
+  <p id="load-error" class="note" role="alert" hidden></p>
+
+  <nav aria-label="Cuprins"><ul>
+    <li><a href="#masuri">Cele trei măsuri</a></li>
+    <li><a href="#ani">Anii datelor</a></li>
+    <li><a href="#include">Ce include și ce nu include</a></li>
+    <li><a href="#limite">Limite cunoscute</a></li>
+    <li><a href="#verificare">Verificare: Urban Atlas</a></li>
+    <li><a href="#sector1">De ce iese în evidență Sectorul 1</a></li>
+    <li><a href="#surse">Surse și licențe</a></li>
+    <li><a href="#date">Date deschise</a></li>
+  </ul></nav>
+
+  <h2 id="masuri">Cele trei măsuri</h2>
+  <p>Nu avem o singură cifră „corectă”. Fiecare măsură răspunde la o altă întrebare și nu se compară cu celelalte. Definițiile de mai jos vin din fișierul <a href="data/definitions.json">definitions.json</a>.</p>
+  <div id="defs-main"><noscript><p class="note">Definițiile se încarcă cu JavaScript. Le găsești și în fișierul <a href="data/definitions.json">definitions.json</a>.</p></noscript></div>
+  <h3 id="verificari">Verificare și referință (nu sunt măsuri)</h3>
+  <div id="defs-other"></div>
+
+  <h2 id="ani">Anii datelor</h2>
+  <div class="scroll" role="region" tabindex="0" aria-label="Anii datelor, derulează">
+  <table>
+    <caption>Ce an are fiecare intrare</caption>
+    <thead><tr><th scope="col" class="l">Intrare</th><th scope="col" class="l">An / dată</th><th scope="col" class="l">Sursă</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Coronament arbori</th><td class="l"><span data-v="canopy_range">…</span></td><td class="l">Copernicus CLMS, HRL VLCC</td></tr>
+      <tr><th scope="row">Populație</th><td class="l">recensământul <span data-v="pop_year">…</span> (aceeași populație pentru toți anii coronamentului)</td><td class="l">Eurostat, Census Grid</td></tr>
+      <tr><th scope="row">Populație INS pe sector (referință)</th><td class="l">recensământul <span data-v="pop_year">…</span>, rezultate definitive; nu intră în calcule</td><td class="l">Institutul Național de Statistică</td></tr>
+      <tr><th scope="row">Verde public cartografiat</th><td class="l">instantaneu OpenStreetMap din <span data-v="osm_date">…</span></td><td class="l">OpenStreetMap, prin Geofabrik</td></tr>
+      <tr><th scope="row">Limitele sectoarelor</th><td class="l"><span data-v="bounds">…</span> (generalizate)</td><td class="l">ANCPI</td></tr>
+      <tr><th scope="row">Verificarea cu Urban Atlas</th><td class="l"><span data-v="stl_year">…</span></td><td class="l">Copernicus CLMS, Urban Atlas Street Tree Layer</td></tr>
+    </tbody>
+  </table></div>
+  <p>Populația are același an pentru toți anii de coronament, deci „m² pe locuitor” folosește același număr de locuitori pentru fiecare an. Valorile pe locuitor folosesc populația din grila Eurostat de 1 km, împărțită pe sectoare după suprafață, la fel pentru oraș, sectoare și celule. Cifrele INS pe sector (RPL 2021, rezultate definitive) sunt doar o referință în fișierele de date și nu intră în calcule. Harta OpenStreetMap și populația nu sunt din același an.</p>
+
+  <div id="ins-ref"></div>
+
+  <h2 id="include">Ce include și ce nu include</h2>
+  <ul>
+    <li>Coronamentul include arbori din parcuri, păduri, străzi, grădini și curți private. Nu face diferența între public și privat.</li>
+    <li>Verdele public cartografiat include spațiile verzi desenate în OpenStreetMap cu etichetele din definiția de mai sus. Excludem pădurile, locurile marcate cu acces privat și grădinile etichetate ca private sau de bloc. Un spațiu neetichetat astfel poate fi totuși privat: harta este incompletă și neuniformă.</li>
+    <li>Nu includem balcoane, acoperișuri verzi sau iarba de pe marginea drumurilor, decât dacă apar în sursele de mai sus.</li>
+    <li>Celulele de 1 km de la marginea orașului: valorile se referă doar la partea din București.</li>
+  </ul>
+
+  <h2 id="limite">Limite cunoscute</h2>
+  <ul>
+    <li><strong>Produsul Copernicus (VLCC) omite o parte din arborii izolați.</strong> Pixelii care sunt doar parțial acoperiți de arbori sunt adesea socotiți ca fără arbori. Ca verificare, am comparat anul <span data-v="stl_year">…</span> cu alt produs Copernicus, „Street Tree Layer” din Urban Atlas, care cuprinde doar grupuri de copaci de cel puțin 500 m² și nu include pădurile: <span data-v="stl_text">cifrele diferă între cele două produse.</span> Vezi <a href="#verificare">verificarea</a>. Cele două straturi nu acoperă același lucru, deci diferența nu arată singură care dintre ele e mai aproape de realitate.</li>
+    <li><strong>Pixeli de 10 m.</strong> Nu se văd arbori izolați sau mici. Limitele sectoarelor sunt generalizate (simplificate).</li>
+    <li><strong>Schimbările de la un an la altul sunt modelate.</strong> Valorile pe ani vin dintr-un model aplicat imaginilor din fiecare an. O variație mică poate fi zgomot, nu pierdere sau câștig real de arbori. <span data-v="yoy_text">Aplicăm o regulă de control (CANOPY_YOY) pe schimbarea anuală a orașului.</span></li>
+    <li><strong>OpenStreetMap este incomplet și se schimbă.</strong> Avem doar instantaneul din <span data-v="osm_date">…</span>; nu putem arăta verdele public din anii dinainte.</li>
+    <li><strong>Populația.</strong> Grila de 1 km este alocată pe sectoare după suprafață, deci cifrele pe sector sunt aproximative.</li>
+    <li><strong>Nu facem prognoze și nu dăm sfaturi.</strong> Site-ul descrie ce se vede în date; nu spune dacă orașul respectă sau nu o normă sau o obligație.</li>
+  </ul>
+
+  <h2 id="verificare">Verificare: grupuri de copaci din Urban Atlas</h2>
+  <p id="cross-text">Am comparat coronamentul Copernicus cu un alt strat Copernicus, Street Tree Layer din Urban Atlas, care cuprinde doar grupuri de copaci de cel puțin 500 m² și nu include pădurile. <span data-v="stl_text"></span> Cele două straturi nu acoperă același lucru, deci diferența nu arată care e mai aproape de realitate.</p>
+  <div id="src-cross"></div>
+
+  <h2 id="sector1">De ce iese în evidență Sectorul 1</h2>
+  <p id="s1-text">Sectorul 1 are un coronament pe locuitor mult mai mare decât celelalte sectoare.</p>
+  <p>Diferența vine din geografie, nu dintr-o clasificare: sectorul include păduri și parcuri în nord. „Verdele public cartografiat” nu include pădurile, deci diferența este mai mică la această a doua măsură.</p>
+
+  <h2 id="surse">Surse și licențe</h2>
+  <div id="table-sources"><noscript><p>Lista surselor are nevoie de JavaScript; sursele sunt scrise și în blocul „meta” al fiecărui fișier de date.</p></noscript></div>
+  <p>Am modificat datele: le-am decupat pe sectoare și celule de 1 km și am calculat statistici. Textele de atribuire cerute de licențe sunt mai jos și în josul fiecărei pagini. Sub fiecare tabel și grafic sunt linkuri către înregistrările sursă, cu data descărcării. Linkurile duc la pagini publice; fișierele Copernicus se descarcă cu un cont gratuit.</p>
+  <ul id="attributions"></ul>
+  <p>Bibliotecile software copiate pe acest site, cu textele licențelor lor: Observable Plot (<a href="vendor/plot-LICENSE.txt">licență</a>), D3 (<a href="vendor/d3-LICENSE.txt">licență</a>) MapLibre GL JS (<a href="vendor/maplibre-LICENSE.txt">licență</a>) și pmtiles (<a href="vendor/pmtiles-LICENSE.txt">licență</a>). Fonturile hărții (Noto Sans, SIL OFL 1.1; <a href="map/glyphs/OFL.txt">licență</a>) sunt copiate pe acest site și nu se oferă ca descărcare separată. Fonturile Literata (<a href="fonts/Literata-OFL.txt">licență</a>) și Work Sans (<a href="fonts/WorkSans-OFL.txt">licență</a>) sunt sub licența SIL Open Font License 1.1.</p>
+
+  <h2 id="date">Date deschise</h2>
+  <p>Fișierele folosite de acest site (JSON, GeoJSON). Fiecare conține la început un bloc „meta” cu sursele, licențele și notele de acoperire. Fișierele cu date OpenStreetMap sunt separate, deoarece au altă licență (ODbL, cu share-alike). Cum ne citezi: <strong data-v="lic_attr">Verde pe bune</strong>, plus atribuirile surselor de mai sus. Pe lângă fișierele de date, <a href="data/manifest.json">manifest.json</a> este indexul lor.</p>
+  <div id="table-downloads"><noscript><p>Lista fișierelor are nevoie de JavaScript. Indexul fișierelor, cu licența fiecăruia, este în <a href="data/manifest.json">manifest.json</a>.</p></noscript></div>
+  <h3 id="date-harta">Harta cu străzi și „Cel mai apropiat spațiu verde”: licență și metodă</h3>
+  <p>Trei dintre fișiere sunt făcute din OpenStreetMap și au licența ODbL: harta de bază (plăci de hartă PMTiles, filtrate), spațiile verzi și indexul de străzi. Mai jos sunt mențiunea de licență și cum au fost făcute. Din harta de bază am scos punctele de interes și numerele de casă; indexul de străzi nu are numere de casă. Fișierele cu fonturile hărții nu sunt oferite ca descărcare.</p>
+  <div id="nearest-methods"></div>
+  <p class="src">Licențele din tabel sunt cele pe care le acordăm noi pentru fișiere; sunt citite din <code>manifest.json</code>. Licența și linkul ei sunt scrise și în câmpurile <code>licence</code> și <code>licence_url</code> din blocul „meta” al fiecărui fișier. Datele de intrare au licențele lor, în tabelul „Surse și licențe”. Codul paginii are o licență separată: MIT.</p>
+
+  <h2 id="ai">Inteligență artificială</h2>
+  <p>Nicio valoare de pe site nu este produsă sau estimată de un model de inteligență artificială. Toate sunt calculate de cod versionat din datele sursă.</p>
+
+  <section class="coverage" aria-labelledby="cov-h">
+    <h2 id="cov-h">Ce acoperim și ce lipsește</h2>
+    <h3>Acoperit</h3>
+    <ul>
+      <li>Municipiul București, 6 sectoare și celule de 1 km.</li>
+      <li>Coronament arbori <span data-v="canopy_range">…</span>; populație <span data-v="pop_year">…</span>; limite <span data-v="bounds">…</span>; OpenStreetMap la <span data-v="osm_date">…</span>.</li>
+    </ul>
+    <h3>Lipsește</h3>
+    <ul>
+      <li>Măsura „toată vegetația”; cartierele; alte orașe. Valori pe locuitor calculate cu populația INS pe sector (folosim grila Eurostat 2021; cifrele INS sunt doar o referință în fișierele de date).</li>
+    </ul>
+    <h3>Notele fiecărui set de date</h3>
+    <ul id="coverage-notes"></ul>
+  </section>
+</main>
+
+<footer class="site"><div class="wrap">
+  <p>Verde pe bune – proiect independent, făcut din date publice. Fără cookie-uri și fără analiză de trafic. Vezi <a href="despre.html#date-personale">Datele tale</a>.</p>
+<p><a href="despre.html">Despre proiect și contact</a> · <a href="metoda.html#date">Date deschise și licențe</a></p>
+</div></footer>
+<script type="module" src="js/metoda.js"></script>
+</body>
+</html>

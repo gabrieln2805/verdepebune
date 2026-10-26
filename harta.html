@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; worker-src blob:; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'">
+<title>Harta – Verde pe bune</title>
+<meta name="description" content="Harta coronamentului arborilor pe celule de 1 km și a spațiilor verzi publice cartografiate din București.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+<link rel="preload" href="fonts/literata-latin-opsz-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/work-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="vendor/maplibre-gl.css">
+</head>
+<body>
+<a class="skip" href="#main">Sari la conținut</a>
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">Verde pe bune</a>
+  <nav aria-label="Principal"><ul>
+    <li><a href="index.html">Acasă</a></li>
+    <li><a href="harta.html" aria-current="page">Harta coronamentului</a></li>
+    <li><a href="metoda.html">Cum am calculat</a></li>
+    <li><a href="despre.html">Despre</a></li>
+  </ul></nav>
+</div></header>
+
+<main id="main" class="wrap">
+  <div class="hero">
+  <h1>Harta verdeții din București</h1>
+  <p class="lead">Fiecare pătrat are 1 km pe 1 km. Alege ce vrei să vezi: coronamentul arborilor (pe un an ales) sau spațiile verzi publice cartografiate. Conturul gros arată sectoarele. Harta nu are fundal cu străzi: este doar grila și sectoarele.</p>
+  </div>
+
+  <p>Pentru cel mai apropiat spațiu verde de tine, folosește <a href="index.html#nearest">harta cu străzi de pe pagina de start</a>.</p>
+
+  <p id="load-error" class="note" role="alert" hidden></p>
+  <div class="controls">
+    <fieldset>
+      <legend>Strat afișat</legend>
+      <label><input type="radio" name="layer" value="canopy" checked> Coronament arbori (include grădini și curți private)</label>
+      <label><input type="radio" name="layer" value="osm"> Verde public cartografiat (OpenStreetMap, incomplet, fără păduri)</label>
+    </fieldset>
+    <div>
+      <label for="year">An pentru coronament</label><br>
+      <select id="year"></select>
+    </div>
+  </div>
+  <p id="live" class="vh" role="status" aria-live="polite"></p>
+
+  <div id="map" role="region" aria-label="Hartă interactivă a celulelor de 1 km."></div>
+  <noscript><p class="note">Harta are nevoie de JavaScript. Valorile pot fi descărcate din fișierele de date, de pe pagina <a href="metoda.html#date">Cum am calculat</a>.</p></noscript>
+  <div id="legend"></div>
+  <div class="cellinfo" id="cellinfo" aria-live="polite">Apasă pe un pătrat de pe hartă ca să vezi valorile. Valorile unui pătrat de la marginea orașului se referă doar la partea din București.</div>
+  <p class="src" id="map-attrib-text"></p>
+  <div id="src-map"></div>
+
+  <p id="map-alt">Alternativă text la hartă: valorile pentru fiecare celulă de 1 km (coronament pe ani, verde public cartografiat, populație) sunt în fișierele <a href="data/cells_canopy.geojson">cells_canopy.geojson</a> și <a href="data/cells_public_green_osm.json">cells_public_green_osm.json</a>; lista tuturor fișierelor este pe pagina <a href="metoda.html#date">Cum am calculat</a>. Apăsarea pe un pătrat arată valorile lui în caseta de mai sus.</p>
+
+  <section class="coverage" aria-labelledby="cov-h">
+    <h2 id="cov-h">Ce acoperim și ce lipsește</h2>
+    <h3>Acoperit</h3>
+    <ul>
+      <li>Municipiul București: <span data-v="n_cells">…</span> de celule de 1 km care ating orașul, și cele 6 sectoare.</li>
+      <li>Coronament arbori: anii <span data-v="canopy_range">…</span>. Populație: recensământul <span data-v="pop_year">…</span>. Verde public cartografiat: OpenStreetMap, instantaneu din <span data-v="osm_date">…</span>.</li>
+    </ul>
+    <h3>Lipsește</h3>
+    <ul>
+      <li>Măsura „toată vegetația” și cartierele. Valori pe locuitor calculate cu populația INS pe sector (folosim grila Eurostat 2021; cifrele INS sunt doar o referință în fișierele de date).</li>
+      <li>Raportul pe locuitor nu se arată pentru celulele cu foarte puțini locuitori (vezi notele de mai jos).</li>
+    </ul>
+    <h3>Notele fiecărui set de date</h3>
+    <ul id="coverage-notes"></ul>
+  </section>
+</main>
+
+<footer class="site"><div class="wrap">
+  <h2 id="atribuiri-harta">Atribuiri și licențe</h2>
+  <ul id="attributions"></ul>
+  <p>Verde pe bune – proiect independent, făcut din date publice. Fără cookie-uri și fără analiză de trafic. Vezi <a href="despre.html#date-personale">Datele tale</a>.</p>
+  <p>Hartă: MapLibre GL JS 4.7.1 (licență BSD-3-Clause), copiat pe acest site. Nu se folosește niciun serviciu de hărți extern și nicio imagine de fundal.</p>
+<p><a href="despre.html">Despre proiect și contact</a> · <a href="metoda.html#date">Date deschise și licențe</a></p>
+</div></footer>
+<script type="module" src="js/harta.js"></script>
+</body>
+</html>

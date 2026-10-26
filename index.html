@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; worker-src blob:; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'">
+<title>Cel mai apropiat spațiu verde din București – Verde pe bune</title>
+<meta name="description" content="Află care sunt cele mai apropiate spații verzi cartografiate de locația ta, de o stradă sau de un punct de pe hartă, în București. Plus cât verde are orașul, din date publice.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="vendor/maplibre-gl.css">
+<link rel="preload" href="fonts/literata-latin-opsz-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/work-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+</head>
+<body>
+<a class="skip" href="#main">Sari la conținut</a>
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">Verde pe bune</a>
+  <nav aria-label="Principal"><ul>
+    <li><a href="index.html" aria-current="page">Acasă</a></li>
+    <li><a href="harta.html">Harta coronamentului</a></li>
+    <li><a href="metoda.html">Cum am calculat</a></li>
+    <li><a href="despre.html">Despre</a></li>
+  </ul></nav>
+</div></header>
+
+<main id="main" class="wrap">
+  <div class="hero compact">
+  <h1>Cât verde are București?</h1>
+  <p class="lead">Găsește cele mai apropiate spații verzi cartografiate și vezi cât verde are orașul, din date publice.</p>
+  </div>
+
+  <section id="nearest" class="tool" aria-labelledby="nearest-h">
+    <h2 id="nearest-h">Cel mai apropiat spațiu verde</h2>
+    <p class="lead-s">Alege un punct în București: locația ta, o stradă sau un loc de pe hartă. Îți arătăm cele mai apropiate spații verzi cartografiate în OpenStreetMap.</p>
+    <noscript><p class="note">Instrumentul are nevoie de JavaScript. Spațiile verzi și străzile din OpenStreetMap pot fi descărcate din secțiunea „Date deschise” a paginii <a href="metoda.html#date">Cum am calculat</a>.</p></noscript>
+    <p id="tool-error" class="note" role="alert" hidden></p>
+
+    <div class="tool-grid">
+      <div class="tool-pick">
+        <div class="geo">
+          <button type="button" id="btn-geo" class="btn" aria-describedby="geo-explain" disabled>Folosește locația mea</button>
+          <p id="geo-explain" class="hint">Browserul te va întreba dacă permiți folosirea locației. Poziția ta este folosită doar în acest browser, ca să calculăm distanțele: nu o trimitem nicăieri și nu o salvăm. Poți și să scrii numele unei străzi sau să dai clic pe hartă.</p>
+        </div>
+        <div class="street">
+          <label for="street-q" id="street-label">Sau caută o stradă</label>
+          <div class="combo">
+            <input id="street-q" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="street-list" aria-describedby="street-note" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" disabled>
+            <ul id="street-list" role="listbox" aria-labelledby="street-label" hidden></ul>
+          </div>
+          <p id="street-status" class="hint" role="status" aria-live="polite"></p>
+          <p id="street-note" class="hint">Străzi din OpenStreetMap (ODbL), <span data-v="street_date">…</span>. Nu căutăm numere de casă.</p>
+        </div>
+        <fieldset class="types">
+          <legend>Ce fel de locuri căutăm</legend>
+          <label><input type="checkbox" id="t-main" checked disabled> Parcuri și grădini</label>
+          <label><input type="checkbox" id="t-play" disabled> Locuri de joacă și parcuri pentru câini</label>
+          <label><input type="checkbox" id="t-forest" disabled> Păduri <span class="hint">(pădure, accesul nu este verificat)</span></label>
+        </fieldset>
+      </div>
+
+      <div class="tool-map">
+        <div id="nmap" role="region" aria-label="Hartă a Bucureștiului cu spațiile verzi. Alternativa la hartă este lista de rezultate; punctul se poate alege și cu locația sau cu căutarea unei străzi."></div>
+        <ul id="nlegend" class="legend" aria-label="Legenda hărții"></ul>
+        <p id="nmap-help" class="hint">Dă clic pe hartă ca să alegi un punct. De la tastatură, folosește căutarea unei străzi sau locația.</p>
+      </div>
+
+      <div class="tool-results">
+        <p id="nstatus" class="status" role="status" aria-live="polite">Alege un punct ca să vezi rezultatele.</p>
+        <div id="nresults" hidden>
+          <h3 id="res-h">Cele mai apropiate spații verzi cartografiate</h3>
+          <p id="res-for" class="src"></p>
+          <ol id="res-list" class="results" aria-labelledby="res-h"></ol>
+          <div class="note-box">
+            <p>Drumul pe jos poate fi mai lung: nu ținem cont de intrări, garduri, râu sau calea ferată. Harta OpenStreetMap este incompletă.</p>
+            <p>Accesul nu este verificat: unele locuri pot fi închise publicului sau au program.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-cov">
+      <h3>Ce acoperă instrumentul</h3>
+      <ul id="tool-cov"></ul>
+    </div>
+  </section>
+  <p id="load-error" class="note" role="alert" hidden></p>
+  <div class="asof" aria-labelledby="asof-h">
+    <h2 id="asof-h" class="kicker">Datele sunt valabile la</h2>
+    <dl id="asof"><dd>Se încarcă…</dd></dl>
+  </div>
+
+  <h2 id="trei-masuri">Trei măsuri, nu una</h2>
+  <p>Măsurăm verdeața din București cu date publice: imagini din satelit (Copernicus) și hărți făcute de voluntari (OpenStreetMap). Nu dăm o singură cifră, pentru că „verde” poate însemna lucruri diferite. Arătăm trei măsuri separate, fiecare cu definiția ei.</p>
+  <div class="cards" id="cards">
+    <noscript><p>Cifrele de pe această pagină au nevoie de JavaScript. Datele brute pot fi descărcate de pe pagina <a href="metoda.html#date">Cum am calculat</a>.</p></noscript>
+  </div>
+  <p>Cele trei măsuri nu se adună și nu se compară între ele. Vezi pe pagina <a href="metoda.html">Cum am calculat</a> ce include și ce nu include fiecare.</p>
+
+  <h2 id="pe-scurt">Verdele din București pe scurt</h2>
+  <ul id="short" class="short"></ul>
+  <p id="change-text"></p>
+
+  <figure>
+    <div id="chart-sectors" class="chart" role="img" aria-label="Grafic cu bare: coronamentul arborilor ca procent din suprafața fiecărui sector. Valorile sunt scrise în textul de sub grafic."></div>
+    <figcaption id="chart-sectors-cap"></figcaption>
+    <p id="chart-sectors-alt"></p>
+  </figure>
+  <p class="note"><strong>Sectorul 1 este diferit geografic.</strong> Include zone mari de pădure și parc în nord, cu relativ puțini locuitori pe km², deci valorile pe locuitor diferă mult de ale celorlalte sectoare. Pădurile nu intră în „verde public cartografiat”. <a href="metoda.html#sector1">Detalii</a>.</p>
+  <div id="src-short"></div>
+  <p>Cifrele pe sector și pe celule de 1 km sunt în fișierele de date, de pe pagina <a href="metoda.html#date">Cum am calculat</a>.</p>
+
+  <section class="coverage" aria-labelledby="cov-h">
+    <h2 id="cov-h">Ce acoperim și ce lipsește</h2>
+    <h3>Acoperit</h3>
+    <ul>
+      <li>Municipiul București, cele 6 sectoare și o grilă de celule de 1 km.</li>
+      <li>Coronament arbori: anii <span data-v="canopy_range">…</span>. Populație: recensământul <span data-v="pop_year">…</span>. Limite: ANCPI <span data-v="bounds">…</span>. Verde public cartografiat: OpenStreetMap, instantaneu din <span data-v="osm_date">…</span>.</li>
+    </ul>
+    <h3>Lipsește</h3>
+    <ul>
+      <li>Măsura „toată vegetația” nu este încă disponibilă.</li>
+      <li>Valori pe locuitor calculate cu populația INS pe sector (folosim grila Eurostat 2021; cifrele INS sunt doar o referință în fișierele de date).</li>
+      <li>Cartierele (nu există o hartă oficială a cartierelor) și alte orașe.</li>
+      <li>Verde public cartografiat pentru anii dinainte de 2026: OpenStreetMap se schimbă, nu avem istoric.</li>
+    </ul>
+    <h3>Notele fiecărui set de date</h3>
+    <ul id="coverage-notes"></ul>
+  </section>
+</main>
+
+<footer class="site"><div class="wrap">
+  <h2>Atribuiri și licențe</h2>
+  <ul id="attributions"></ul>
+  <p>Verde pe bune – proiect independent, făcut din date publice.</p>
+  <p>Hartă: MapLibre GL JS 4.7.1 și pmtiles 4.5.0 (ambele BSD-3-Clause), copiate pe acest site; harta de bază și fonturile hărții sunt tot pe acest site. Nu se folosește niciun serviciu de hărți extern.</p>
+  <p>Nicio valoare de pe acest site nu este produsă de un model de inteligență artificială; toate sunt calculate cu reguli fixe din datele sursă. Fără cookie-uri și fără analiză de trafic. Vezi <a href="despre.html#date-personale">Datele tale</a>.</p>
+<p><a href="despre.html">Despre proiect și contact</a> · <a href="metoda.html#date">Date deschise și licențe</a></p>
+</div></footer>
+<script type="module" src="js/home.js"></script>
+<script type="module" src="js/nearest.js"></script>
+</body>
+</html>
